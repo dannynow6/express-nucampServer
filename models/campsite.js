@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 require('mongoose-currency').loadType(mongoose);
 const Currency = mongoose.Types.Currency; 
 
+// A Model representing a campsite 
 
 const commentSchema = new Schema({
     rating: {

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// A Model representing a partner 
+
 const partnerSchema = new Schema({
     name: {
         type: String,

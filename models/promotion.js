@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 require('mongoose-currency').loadType(mongoose);
 const Currency = mongoose.Types.Currency; 
 
+// A Model representing a promotion 
+
 const promotionSchema = new Schema({
     name: {
         type: String,
