@@ -11,7 +11,7 @@ const router = express.Router();
 //  res.send('respond with a resource');
 //});
 
-router.get('/', (authenticate.verifyAdmin, (req, res, next) => {
+router.get('/', (authenticate.verifyUser, authenticate.verifyAdmin, (req, res) => {
     User.find()
     .then(users => {
         res.statusCode = 200;
