@@ -11,8 +11,7 @@ const router = express.Router();
 //  res.send('respond with a resource');
 //});
 
-router('/')
-.get(authenticate.verifyAdmin, (req, res, next) => {
+router.get('/', (authenticate.verifyAdmin, (req, res, next) => {
     User.find()
     .then(users => {
         res.statusCode = 200;
@@ -20,7 +19,7 @@ router('/')
         res.json(users);
     })
     .catch(err => next(err));
-});
+}));
 
 router.post('/signup', (req, res) => {
   User.register(
