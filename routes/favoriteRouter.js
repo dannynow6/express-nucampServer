@@ -19,8 +19,8 @@ favoriteRouter.route('/')
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Favorite.findOne({ user: req.user._id })
     .then(favorite => {
-        if(!favorite.includes(req.body.campsiteId)) {
-            favorite.push(req.body.campsiteId);
+        if(!favorite.includes(req.body._id)) {
+            favorite.push(req.body._id);
             next(); 
         }
     })
