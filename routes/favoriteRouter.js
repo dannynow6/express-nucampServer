@@ -19,8 +19,8 @@ favoriteRouter.route('/')
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Favorite.findOne({ user: req.user._id })
     .then(favorite => {
-        if(!favorite.includes(req.body._id)) {
-            favorite.push(req.body._id);
+        if(!favorite.campsites.includes(req.body._id)) {
+            favorite.campsites.push(req.body._id);
             next(); 
         }
     })
@@ -38,7 +38,7 @@ favoriteRouter.route('/')
     res.end('PUT operation not supported on /favorites');
 })
 .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-    Favorite.deleteMany()
+    Favorite.fineOneAndDelete()
     .then(response => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -54,7 +54,18 @@ favoriteRouter.route('/:campsiteId')
     res.end(`GET operation not supported on /favorites/${req.params.favoriteId}`);
 })
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res) => {
-    Favorite.create(req.body)
+    Favorite.findOne({ user: req.user._id })
+    .then(favorite => {
+        if(!favorite.campsites.includes(req.params.campsiteId)) {
+            favorite.campsites.push(req.params.campsiteId);
+            next(); 
+        }
+        if(favorite.campsites.includes(req.params.campsiteId)) {
+            res.end('That campsite is already in the list of favorites!');
+            next();
+        }
+    })
+    Favorite.create(favorite.campsites.push(req.params.campsiteId))
     .then(favorite => {
         console.log('Favorite Created ', favorite);
         res.statusCode = 200;
@@ -68,11 +79,19 @@ favoriteRouter.route('/:campsiteId')
     res.end('PUT operation not supported on /favorites');
 })
 .delete(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
-    Favorite.findByIdAndDelete(req.params.favoriteId)
-    .then(response => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(response);
+    Favorite.findOne({ user: req.user._id })
+    .then(favorite => {
+        if(favorite.campsites.includes(req.params.campsiteId)) {
+            let campsite = favorite.campsites.indexOf(req.params.campsiteId);
+            favorite.campsites.splice(campsite, 1); 
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(favorite); 
+        }
+        if(!favorite.campsites.includes(req.params.campsiteId)) {
+            res.setHeader('Content-Type', 'text/plain');
+            res.end("There are not favorites to delete");
+        }
     })
     .catch(err => next(err));
 });
