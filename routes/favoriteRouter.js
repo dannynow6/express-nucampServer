@@ -17,6 +17,13 @@ favoriteRouter.route('/')
     .catch(err => next(err));
 })
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+    Favorite.findOne({ user: req.user._id })
+    .then(favorite => {
+        if(!favorite.includes(req.body.campsiteId)) {
+            favorite.push(req.body.campsiteId);
+            next(); 
+        }
+    })
     Favorite.create(req.body)
     .then(favorite => {
         console.log('Favorite Created ', favorite);
